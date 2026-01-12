@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Crypto Plinko: Adsgram Integration</title>
+    <title>Crypto Plinko: Debug Edition</title>
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://adsgram.ai/js/adsgram.js?v=1"></script>
+    
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700;900&display=swap');
@@ -78,11 +83,11 @@
 
     <div id="value-table">
         <h3>BALL VALUES</h3>
-        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-btc" class="coin-mini-icon">BTC</div> <span class="coin-fixed-val">0.00000001</span></div>
-        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-eth" class="coin-mini-icon">ETH</div> <span class="coin-fixed-val">0.0000006</span></div>
-        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-trx" class="coin-mini-icon">TRX</div> <span class="coin-fixed-val">0.001</span></div>
-        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-usdt" class="coin-mini-icon">USDT</div> <span class="coin-fixed-val">0.002</span></div>
-        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-str" class="coin-mini-icon">STR</div> <span class="coin-fixed-val">5.000</span></div>
+        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-btc" class="coin-mini-icon">BTC</div> <span class="coin-fixed-val">0.000000001</span></div>
+        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-eth" class="coin-mini-icon">ETH</div> <span class="coin-fixed-val">0.00000006</span></div>
+        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-trx" class="coin-mini-icon">TRX</div> <span class="coin-fixed-val">0.01</span></div>
+        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-usdt" class="coin-mini-icon">USDT</div> <span class="coin-fixed-val">0.004</span></div>
+        <div class="val-row"><div style="display:flex; align-items:center;"><img src="" id="icon-str" class="coin-mini-icon">STR</div> <span class="coin-fixed-val">2.000</span></div>
     </div>
 
     <div id="session-score-panel">
@@ -132,7 +137,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // 1. FIREBASE CONFIG
+        // FIREBASE CONFIG (Senin Bilgilerin)
         const firebaseConfig = {
             apiKey: "AIzaSyCEfbxvL_RyxzRHC6O6SDSMQ_mHezIFCDw",
             authDomain: "plinko-faucet.firebaseapp.com",
@@ -141,9 +146,6 @@
             messagingSenderId: "945891210512",
             appId: "1:945891210512:web:eb66f91746bd8c8c032195",
         };
-
-        // 2. ADSGRAM BLOCK ID (Güncellendi)
-        const AdsgramBlockId = "21046"; 
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -159,15 +161,15 @@
         const ctx = canvas.getContext('2d');
 
         const COINS = [
-            { id: 'btc',  baseVal: 0.00000001, currentBalance: 0, minWithdraw: 0.0001, src: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025', color: '#f7931a', decimals: 8 },
-            { id: 'eth',  baseVal: 0.0000006,  currentBalance: 0, minWithdraw: 0.001,   src: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=025', color: '#627eea', decimals: 7 },
-            { id: 'trx',  baseVal: 0.001,      currentBalance: 0, minWithdraw: 50,      src: 'https://cryptologos.cc/logos/tron-trx-logo.png?v=025', color: '#ef0027', decimals: 3 },
-            { id: 'usdt', baseVal: 0.002,      currentBalance: 0, minWithdraw: 10,      src: 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=025', color: '#26a17b', decimals: 3 },
-            { id: 'str',  baseVal: 5.0,        currentBalance: 0, minWithdraw: 20000,   src: 'https://cdn-icons-png.flaticon.com/512/616/616490.png', color: '#ffffff', decimals: 2 }
+            { id: 'btc',  baseVal: 0.000000001, currentBalance: 0, minWithdraw: 0.0001, src: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025', color: '#f7931a', decimals: 8 },
+            { id: 'eth',  baseVal: 0.00000006,  currentBalance: 0, minWithdraw: 0.001,   src: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=025', color: '#627eea', decimals: 7 },
+            { id: 'trx',  baseVal: 0.01,      currentBalance: 0, minWithdraw: 50,      src: 'https://cryptologos.cc/logos/tron-trx-logo.png?v=025', color: '#ef0027', decimals: 3 },
+            { id: 'usdt', baseVal: 0.004,      currentBalance: 0, minWithdraw: 10,      src: 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=025', color: '#26a17b', decimals: 3 },
+            { id: 'str',  baseVal: 2.0,        currentBalance: 0, minWithdraw: 20000,   src: 'https://cdn-icons-png.flaticon.com/512/616/616490.png', color: '#ffffff', decimals: 2 }
         ];
 
-        const ROWS = 14; const GRAVITY = 0.55; const FRICTION = 0.98; const BOUNCE = 0.55; const UI_HEIGHT = 110; 
-        const MULTIPLIERS = [10, 5, 2, 1, 0.5, 0.2, 0.2, 0.2, 0.5, 1, 2, 5, 10];
+        const ROWS = 10; const GRAVITY = 0.55; const FRICTION = 0.98; const BOUNCE = 0.55; const UI_HEIGHT = 110; 
+        const MULTIPLIERS = [25, 15, 1, 5, 2, 50, 2, 5, 1, 15, 25, 25];
 
         let width, height;
         let ballQueue = []; let pegs = []; let balls = []; let slots = []; let particles = []; let popups = [];
@@ -257,7 +259,10 @@
             });
         }
 
-        // --- ADSGRAM & GAME LOGIC ---
+        // --- ADSGRAM REKLAM DENETLEYİCİSİ ---
+        // BlockID ekran görüntüsünden alındı: 21046
+        const AdController = window.Adsgram.init({ blockId: "21056", debug: true });
+
         window.game = {
             openWithdrawModal: () => { renderWithdrawList(); subscribeToHistory(); withdrawModal.style.display = 'flex'; },
             closeWithdrawModal: () => { withdrawModal.style.display = 'none'; },
@@ -276,23 +281,25 @@
                 }
             },
 
-            // --- ADSGRAM REKLAM FONKSİYONU ---
+            // --- REKLAM GÖSTERME (DOKÜMANTASYONA GÖRE) ---
             triggerAd: () => {
-                // Adsgram Controller
-                if (window.Adsgram) {
-                    const AdController = window.Adsgram.init({ blockId: AdsgramBlockId });
+                if (AdController) {
                     AdController.show().then((result) => {
-                        // Reklam başarıyla izlendi (reward)
+                        // Kullanıcı reklamı sonuna kadar izledi
+                        console.log("Reward Granted:", result);
                         window.game.claimReward();
                     }).catch((result) => {
-                        // Hata veya geçme (skip)
-                        console.log("Adsgram error/skip:", result);
-                        // Kullanıcı reklamı atlarsa veya hata olursa yine de ödülü veriyoruz (Kullanıcı deneyimi için)
-                        window.game.claimReward(); 
+                        // Hata oldu veya kapatıldı
+                        // ERUDA KONSOLUNDA GÖRÜNECEK HATA:
+                        console.error("Adsgram Error/Skip:", result);
+                        console.log("JSON Error:", JSON.stringify(result));
+                        
+                        // Hata olsa bile oyun devam etsin (Test için)
+                        window.game.claimReward();
                     });
                 } else {
-                    console.error("Adsgram script not loaded!");
-                    window.game.claimReward(); // Fallback
+                    console.error("AdController not initialized");
+                    window.game.claimReward();
                 }
             },
 
